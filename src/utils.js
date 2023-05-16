@@ -1,11 +1,16 @@
 // import JSZip from 'jszip';
 // import * as toGeoJSON from '@tmcw/togeojson';
 
-export function loadFile(url) {
+export function loadFile(url, options) {
 	return new Promise((resolve, reject) => {
 		let xhr = new XMLHttpRequest();
 		xhr.open('GET', url);
 		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+		if (options.hasOwnProperty('headers')) {
+			for (var header in options.headers) {
+				xhr.setRequestHeader(header, options.headers[header]);
+			}
+		}
 		xhr.responseType = "arraybuffer";
 		xhr.onload = () => {
 			if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)) {

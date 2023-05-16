@@ -1,17 +1,22 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(global = global || self, factory(global['leaflet-kmz'] = {}));
-}(this, (function (exports) { 'use strict';
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global["leaflet-kmz"] = {}));
+})(this, (function (exports) { 'use strict';
 
 	// import JSZip from 'jszip';
 	// import * as toGeoJSON from '@tmcw/togeojson';
 
-	function loadFile(url) {
+	function loadFile(url, options) {
 		return new Promise((resolve, reject) => {
 			let xhr = new XMLHttpRequest();
 			xhr.open('GET', url);
 			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+			if (options.hasOwnProperty('headers')) {
+				for (var header in options.headers) {
+					xhr.setRequestHeader(header, options.headers[header]);
+				}
+			}
 			xhr.responseType = "arraybuffer";
 			xhr.onload = () => {
 				if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 0)) {
@@ -193,13 +198,13 @@
 			if (kmzUrl) this.load(kmzUrl);
 		},
 
-		add: function(kmzUrl) {
-			this.load(kmzUrl);
+		add: function(kmzUrl, options) {
+			this.load(kmzUrl, options);
 		},
 
-		load: function(kmzUrl) {
+		load: function(kmzUrl, options) {
 			L.KMZLayer._jsPromise = lazyLoader(this._requiredJSModules(), L.KMZLayer._jsPromise)
-				.then(() => loadFile(kmzUrl))
+				.then(() => loadFile(kmzUrl, options))
 				.then((data) => this.parse(data, { name: getFileName(kmzUrl), icons: {} }));
 		},
 
@@ -417,5 +422,5 @@
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 //# sourceMappingURL=leaflet-kmz-src.js.map
