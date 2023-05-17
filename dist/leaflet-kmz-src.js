@@ -420,7 +420,5 @@
 	exports.KMZLayer = KMZLayer;
 	exports.KMZMarker = KMZMarker;
 
-	Object.defineProperty(exports, '__esModule', { value: true });
-
 }));
 //# sourceMappingURL=leaflet-kmz-src.js.map

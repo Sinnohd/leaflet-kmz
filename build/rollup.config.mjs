@@ -1,8 +1,19 @@
-import { terser } from "rollup-plugin-terser";
-import resolve from 'rollup-plugin-node-resolve';
-import commonJS from 'rollup-plugin-commonjs';
+import terser from '@rollup/plugin-terser';
+import resolve from '@rollup/plugin-node-resolve';
+import commonJS from '@rollup/plugin-commonjs';
 
-let plugin = require('../package.json');
+
+// Workaround from https://www.stefanjudis.com/snippets/how-to-import-json-files-in-es-modules-node-js/
+//import plugin from '../package.json' assert { type: 'json' }; // the future, throughs today an experimental warning
+
+// Option 1:
+import { readFile } from 'fs/promises';
+let plugin = JSON.parse(
+  await readFile(
+    new URL('../package.json', import.meta.url)
+  )
+);
+
 
 let input = "src/index.js";
 let output = {
